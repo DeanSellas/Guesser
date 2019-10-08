@@ -1,0 +1,9 @@
+# FOLDERS
+.vscode/
+__pycache__/
+.old/
+
+# FILE Ext
+*.vsdx
+
+# FILES
