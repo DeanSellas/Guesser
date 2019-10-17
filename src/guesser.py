@@ -2,16 +2,17 @@ import torch
 
 from vendor.lmexplorer.lm_explorer.lm.gpt2 import GPT2LanguageModel
 
+from vendor.logger.logger import Logger
+
+Log = Logger()
+
 class Guesser():
-    def __init__(self, model="gpt2", interact=False, topK=10, text=""):
+    def __init__(self, model="gpt2", interact=False, topK=10):
         self.model = model
         self.topK = topK
-
-        if text == "" and not interact:
-            raise EnvironmentError("Please input valid text or use the --interact flag")
+        self.interact = interact
 
         self._build()
-        self.start(interact, text)
     
     def _build(self):
         self.GPT = GPT2LanguageModel(model_name=self.model)
@@ -26,22 +27,29 @@ class Guesser():
         self.best_probabilities = probabilities[best_indices].tolist()
     
     def _getWords(self):
+        '''
+        returns Top-K Words from GPT-2
+        '''
         return self.best_words
     
     def _getPropability(self):
+        '''
+        returns Top-K Propabilities from GPT-2
+        '''
         return [round(p * 100, 2) for p in self.best_probabilities]
 
-    def start(self, interact=False, text=""):          
+    def start(self, text=""):    
+        if text == "" and not self.interact:
+            raise EnvironmentError("Please input valid text or use the --interact flag")
+
         if text != "":
             self._run(text)
-            print(self._output())
+            Log.Info(self._output())
             return
-        while interact:
+        while self.interact:
                 text = input("Input Text >> ")
                 self._run(text)
-                print(self._output())
-
+                Log.Info(text=self._output())
+                
     def _output(self):
-        words = self._getWords()
-        prob = self._getPropability()
-        return [(words[i], prob[i]) for i in range(self.topK)]
+        return [(self._getWords()[i], self._getPropability()[i]) for i in range(self.topK)]
