@@ -4,19 +4,20 @@ from vendor.lmexplorer.lm_explorer.lm.gpt2 import GPT2LanguageModel
 
 from vendor.logger.logger import Logger
 
-Log = Logger()
-
 class Guesser():
-    def __init__(self, model="gpt2", interact=False, topK=10):
+    def __init__(self, model="gpt2", interact=False, topK=10, Log=None):
         self.model = model
         self.topK = topK
         self.interact = interact
-
-        self._build()
+        
+        self._build(Log)
     
-    def _build(self):
+    def _build(self, Log):
+        if Log == None:
+            Log = Logger()
+
+        self.Log = Log
         self.GPT = GPT2LanguageModel(model_name=self.model)
-        return True
 
     def _run(self, text):
         logits = self.GPT.predict(text, "")
@@ -28,13 +29,13 @@ class Guesser():
     
     def _getWords(self):
         '''
-        returns Top-K Words from GPT-2
+            returns Top-K Words from GPT-2
         '''
         return self.best_words
     
     def _getPropability(self):
         '''
-        returns Top-K Propabilities from GPT-2
+            returns Top-K Propabilities from GPT-2
         '''
         return [round(p * 100, 2) for p in self.best_probabilities]
 
@@ -44,12 +45,12 @@ class Guesser():
 
         if text != "":
             self._run(text)
-            Log.Info(self._output())
+            self.Log.Info(self._output())
             return
         while self.interact:
                 text = input("Input Text >> ")
                 self._run(text)
-                Log.Info(text=self._output())
+                self.Log.Info(self._output())
                 
     def _output(self):
         return [(self._getWords()[i], self._getPropability()[i]) for i in range(self.topK)]
