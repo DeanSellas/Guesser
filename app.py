@@ -17,15 +17,24 @@ from vendor.logger.logger import Logger
     best_probabilities = probabilities[best_indices].tolist()
     print(best_words)
 """
-Log = Logger()
-def start(model="gpt2", interact=False, topK=10, text=""):
 
+Log = Logger()
+def start(model="gpt2", interact=False, score=False, topK=10, text=""):
+    checks(model, topK)
     # MOVE TO LOGGER CLASS
-    # clear = lambda: os.system('cls')
+    # 
     Log.Warn(text="Model: {} | Interact: {} | TopK: {} | Text: {}".format(
         model, interact, topK, text))
-    guess = Guesser(model, interact, topK, Log)
+    guess = Guesser(model, interact, score, topK, Log)
     guess.start()
+
+def checks(model, topK):
+    mList = ["gpt2", "gpt2-medium", "gpt2-large"]
+    if model not in mList:
+        Log.Error("Model Must be a value in {}".format(mList), ValueError)
+
+    if topK < 1:
+        Log.Error("TopK must be a value greater than 0", ValueError)
 
 if __name__ == "__main__":
     Fire(start)

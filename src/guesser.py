@@ -5,7 +5,7 @@ from vendor.lmexplorer.lm_explorer.lm.gpt2 import GPT2LanguageModel
 from vendor.logger.logger import Logger
 
 class Guesser():
-    def __init__(self, model="gpt2", interact=False, topK=10, Log=None):
+    def __init__(self, model="gpt2", interact=False, score=False, topK=10, Log=None):
         self.model = model
         self.topK = topK
         self.interact = interact

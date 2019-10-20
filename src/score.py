@@ -1,6 +1,13 @@
+from vendor.logger.logger import Logger
+
 class Score():
-    def __init__(self, Log=Logger()):
+    def __init__(self, mod=0.5, Log=None):
+        if Log == None:
+            Log = Logger()
+        
         self.Log = Log
+
+        self._setMod(mod)
 
     def score(self, outList, text):
         '''
@@ -13,11 +20,13 @@ class Score():
                 break
         self.Log.Info("Score of {}: {}".format(text, prob))
         return (text, prob)
+    
+    def scoreModifier(self, score):
+        return score * self.mod
 
-    def scoreModifier(self, score, mod=0.5):
-        return score * mod
-
-
+    def _setMod(self, mod):
+        self.mod = mod
+    
     def _remSpecial(self, text=""):
         '''
             Removes Special Characters from a string of text
