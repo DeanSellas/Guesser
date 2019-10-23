@@ -1,28 +1,37 @@
 from vendor.logger.logger import Logger
 
 class Score():
-    def __init__(self, mod=0.5, Log=None):
+    def __init__(self, mod=1, Log=None):
         if Log == None:
             Log = Logger()
         
         self.Log = Log
-
+        self.scoreList = list()
         self._setMod(mod)
 
     def score(self, outList, text):
         '''
             Scores guesses with inputed text
         '''
+
+        def scoreModifier(score):
+            return score * self.mod
+        
         prob = 0.0
         for item in outList:
-            if text == self._remSpecial():
+            if text == self._remSpecial(item[0]):
                 prob = scoreModifier(item[1])
                 break
         self.Log.Info("Score of {}: {}".format(text, prob))
-        return (text, prob)
+        score = (text, prob)
+        self.scoreList.append((text, prob))
+        return score
     
-    def scoreModifier(self, score):
-        return score * self.mod
+    def calcScore(self):
+        s = 0
+        for item in self.scoreList:
+            s += item[1]
+        return s
 
     def _setMod(self, mod):
         self.mod = mod
