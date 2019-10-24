@@ -43,15 +43,21 @@ class Guesser():
         '''
         return [round(p * 100, 2) for p in self.best_probabilities]
 
-    def start(self, text="", nextWord=""):    
+    def start(self, text="", nextWord=""):
+
+        def _process(text, guess):
+            self._run(text)
+            ansList = self._output()
+            self.Log.Info(("Answer List : {}".format(ansList)))
+
+            score = self.Scorer.score(ansList, guess)
+            self.Log.Info(score)
+
         if text == "" and not self.interact:
             raise EnvironmentError("Please input valid text or use the --interact flag")
 
         if text != "":
-            self._run(text)
-
-            ansList = self._output()
-            self.Log.Info(ansList)
+            _process(text, nextWord)
             return
 
         while self.interact:
@@ -61,15 +67,14 @@ class Guesser():
                 self.Log.Info("please provide a valid input")
                 continue
 
+            if text == "#end":
+                break
+
             guess = input("What will the next word be >> ")
+            _process(text, guess)
+            
 
-            self._run(text)
-            ansList = self._output()
-            self.Log.Info(ansList)
-
-            score = self.Scorer.score(ansList, guess)
-            self.Log.Info(score)
-            self.Log.Info(self.Scorer.calcScore())
+        self.Log.Info(self.Scorer.calcScore())
 
     def _output(self):
         return [(self._getWords()[i], self._getPropability()[i]) for i in range(self.topK)]

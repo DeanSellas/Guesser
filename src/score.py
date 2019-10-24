@@ -13,25 +13,24 @@ class Score():
         '''
             Scores guesses with inputed text
         '''
-
-        def scoreModifier(score):
-            return score * self.mod
         
-        prob = 0.0
+        s = 0.0
         for item in outList:
             if text == self._remSpecial(item[0]):
-                prob = scoreModifier(item[1])
+                s = (item[1] / outList[0][1]) * 100
                 break
-        self.Log.Info("Score of {}: {}".format(text, prob))
-        score = (text, prob)
-        self.scoreList.append((text, prob))
-        return score
+        
+        out = (text, s)
+        self.Log.Info("Score of \'{}\': {}".format(out[0], out[1]))
+        
+        self.scoreList.append(out)
+        return out
     
     def calcScore(self):
         s = 0
         for item in self.scoreList:
             s += item[1]
-        return s
+        return s / (len(self.scoreList) * 100) * 100
 
     def _setMod(self, mod):
         self.mod = mod
