@@ -1,9 +1,9 @@
-[submodule "vendor\\lmexplorer"]
-	path = vendor\\lmexplorer
-	url = https://github.com/DeanSellas/lm-explorer
-[submodule "vendor\\transformers"]
-	path = vendor\\transformers
-	url = https://github.com/DeanSellas/transformers
 [submodule "vendor/logger"]
 	path = vendor/logger
 	url = https://github.com/DeanSellas/pyLogger
+[submodule "vendor/transformers"]
+	path = vendor/transformers
+	url = https://github.com/DeanSellas/transformers
+[submodule "vendor/lmexplorer"]
+	path = vendor/lmexplorer
+	url = https://github.com/DeanSellas/lm-explorer
