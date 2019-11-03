@@ -2,6 +2,7 @@
 .vscode/
 __pycache__/
 .old/
+Log/
 
 # FILE Ext
 *.vsdx

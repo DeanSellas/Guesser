@@ -18,20 +18,20 @@ from vendor.logger.logger import Logger
     print(best_words)
 """
 
-Log = Logger()
-def start(model="gpt2", interact=False, score=False, topK=10, text=""):
+
+def start(model="gpt2", interact=False, score=False, topK=10, text="", logpath=""):
+    Log = Logger(filePath=logpath)
     checks(model, topK)
-    # MOVE TO LOGGER CLASS
-    # 
+    
     Log.Warn(text="Model: {} | Interact: {} | TopK: {} | Text: {}".format(
         model, interact, topK, text))
     guess = Guesser(model, interact, score, topK, Log)
     guess.start()
 
 def checks(model, topK):
-    mList = ["gpt2", "gpt2-medium", "gpt2-large"]
-    if model not in mList:
-        Log.Error("Model Must be a value in {}".format(mList), ValueError)
+    model_List = ["gpt2", "gpt2-medium", "gpt2-large"]
+    if model not in model_List:
+        Log.Error("Model Must be a value in {}".format(model_List), ValueError)
 
     if topK < 1:
         Log.Error("TopK must be a value greater than 0", ValueError)

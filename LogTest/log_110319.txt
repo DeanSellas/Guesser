@@ -1,0 +1,5 @@
+WARNING | Model: gpt2 | Interact: True | TopK: 10 | Text: 
+INPUT | Input Text >>  Test
+INPUT | What will the next word be >>  
+INFO | Answer List : [('.', 4.49), ('\n', 4.2), (',', 3.11), ('-', 2.17), (' to', 1.47), (' of', 1.45), (' the', 1.4), (' and', 1.4), (':', 1.16), (' in', 1.0)]
+INFO | ('', 100.0)

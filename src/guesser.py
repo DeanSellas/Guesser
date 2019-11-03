@@ -61,16 +61,17 @@ class Guesser():
             return
 
         while self.interact:
-            text = input("Input Text >> ")
+            text = self.Log.Input("Input Text >> ")
 
             if text == "":
                 self.Log.Info("please provide a valid input")
                 continue
 
             if text == "#end":
+                self.Log.Info("Ending Program")
                 break
 
-            guess = input("What will the next word be >> ")
+            guess = self.Log.Input("What will the next word be >> ")
             _process(text, guess)
             
 
