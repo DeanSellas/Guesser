@@ -6,8 +6,13 @@ from src.guesser import Guesser
 
 from vendor.logger.logger import Logger
 
+from tests import encodeTests
 
-def start(model="gpt2", interact=False, score=False, topK=10, text="", logpath=""):
+def start(model="gpt2", interact=False, score=False, topK=10, text="", logpath="", tests=False):
+    if tests:
+        runTests()
+        return
+
     Log = Logger(filePath=logpath)
     checks(model, topK, Log)
     
@@ -23,6 +28,10 @@ def checks(model, topK, Log):
 
     if topK < 1:
         Log.Error("TopK must be a value greater than 0", ValueError)
+
+def runTests():
+    encodeTests.run()
+    
 
 if __name__ == "__main__":
     Fire(start)
