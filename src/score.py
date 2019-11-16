@@ -27,6 +27,9 @@ class Score():
         return out
     
     def calcScore(self):
+        if len(self.scoreList) < 1:
+            return 0.0
+            
         s = 0
         for item in self.scoreList:
             s += item[1]

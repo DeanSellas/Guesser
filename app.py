@@ -8,16 +8,17 @@ from vendor.logger.logger import Logger
 
 from tests import encodeTests
 
+Log = Logger()
 def start(model="gpt2", interact=False, score=False, topK=10, text="", logpath="", tests=False):
     if tests:
         runTests()
         return
 
-    Log = Logger(filePath=logpath)
+    Log.setPath(logpath)
     checks(model, topK, Log)
     
-    Log.Warn(text="Model: {} | Interact: {} | TopK: {} | Text: {}".format(
-        model, interact, topK, text))
+    Log.Info(text="Model: {} | Interact: {} | TopK: {} | Text: {} | Log Path: {} | Tests: {}".format(
+        model, interact, topK, text, logpath, tests))
     guess = Guesser(model, interact, score, topK, Log)
     guess.start()
 
