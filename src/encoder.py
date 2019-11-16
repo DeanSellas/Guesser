@@ -22,23 +22,27 @@ class Encoder():
 
     def encode(self, text):
         encodedText = ""
+        feedLst = []
+        feed = ""
         for word in text.split():
             if self.rand.random() < self.prob:
-
                 # skip any non letter characters
                 if not ('a' <= word.lower() <= 'z'):
                     continue
-                
-                word = "${"+self.clean(word)+"}"
+                feedLst.append([feed, word])
+                word = "${"+self._clean(word)+"}"
+                feed = ""
 
+            else:
+                feed += "{} ".format(word)
             encodedText += "{} ".format(word)
         
-        return encodedText
+        return (feedLst, encodedText)
 
     def decode(self):
         pass
-    
-    def clean(self, word):
+
+    def _clean(self, word):
         out = ""
         for c in word:
             if 'a' <= c.lower() <= 'z':

@@ -20,7 +20,7 @@ def start(model="gpt2", interact=False, score=False, topK=10, text="", logpath="
     Log.Info(text="Model: {} | Interact: {} | TopK: {} | Text: {} | Log Path: {} | Tests: {}".format(
         model, interact, topK, text, logpath, tests))
     guess = Guesser(model, interact, score, topK, Log)
-    guess.start()
+    guess.start(text)
 
 def checks(model, topK, Log):
     model_List = ["gpt2", "gpt2-medium", "gpt2-large"]

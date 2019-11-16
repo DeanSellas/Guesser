@@ -1,6 +1,7 @@
 import torch
 
 from src.score import Score
+from src.encoder import Encoder
 
 from vendor.lmexplorer.lm_explorer.lm.gpt2 import GPT2LanguageModel
 
@@ -21,6 +22,7 @@ class Guesser():
 
         self.Log = Log
         self.Scorer = Scorer
+        self.Encoder = Encoder()
         self.GPT = GPT2LanguageModel(model_name=self.model)
 
     def _run(self, text):
@@ -38,44 +40,56 @@ class Guesser():
         return self.best_words
     
     def _getPropability(self):
-        '''
-            returns Top-K Propabilities from GPT-2
-        '''
+        ''' returns top-k Propabilities from GPT-2 '''
         return [round(p * 100, 2) for p in self.best_probabilities]
 
-    def start(self, text="", nextWord=""):
-
-        def _process(text, guess):
+    def _process(self, text, guess):
+            ''' scores inputted text and logs it '''
             self._run(text)
-            ansList = self._output()
-            self.Log.Info(("Answer List : {}".format(ansList)))
+            outputLst = self._output()
+            self.Log.Info(("Answer List : {}".format(outputLst)))
 
-            score = self.Scorer.score(ansList, guess)
+            score = self.Scorer.score(outputLst, guess)
             self.Log.Info(score)
+    
+    def start(self, text=""):
+        ''' 
+        starts program
+
+        text = Text to be inputted
+        '''
 
         if text == "" and not self.interact:
             raise EnvironmentError("Please input valid text or use the --interact flag")
 
         if text != "":
-            _process(text, nextWord)
-            return
+            test = self.Encoder.encode(text=text)
+            for item in test[0]:
+                if item[0] == '':
+                    continue
+                self._process(item[0], item[1])
 
-        while self.interact:
-            text = self.Log.Input("Input Text >> ")
+        else:
+            while self.interact:
+                text = self.Log.Input("Input Text >> ")
 
-            if text == "":
-                self.Log.Info("please provide a valid input")
-                continue
+                if text == "":
+                    self.Log.Info("Please provide a valid input")
+                    continue
+                
+                if text == "#?":
+                    self.Log.Info("Available Commands: \n#?: Shows available commands\n#end: Ends Execution")
+                    continue
 
-            if text == "#end":
-                self.Log.Info("Ending Program")
-                break
+                if text == "#end":
+                    self.Log.Info("Ending Program")
+                    break
 
-            guess = self.Log.Input("What will the next word be >> ")
-            _process(text, guess)
+                guess = self.Log.Input("What will the next word be >> ")
+                self._process(text, guess)
             
-
-        self.Log.Info(self.Scorer.calcScore())
+        self.Log.Info("Score: {}".format(self.Scorer.calcScore()))
 
     def _output(self):
+        ''' returns top-k words and propabilities '''
         return [(self._getWords()[i], self._getPropability()[i]) for i in range(self.topK)]

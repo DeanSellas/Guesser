@@ -33,7 +33,7 @@ class Score():
         s = 0
         for item in self.scoreList:
             s += item[1]
-        return s / (len(self.scoreList) * 100) * 100
+        return round(s / (len(self.scoreList) * 100) * 100, 2)
 
     def _setMod(self, mod):
         self.mod = mod
