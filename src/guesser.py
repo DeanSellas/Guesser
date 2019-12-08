@@ -8,28 +8,26 @@ from vendor.lmexplorer.lm_explorer.lm.gpt2 import GPT2LanguageModel
 from vendor.logger.logger import Logger
 
 class Guesser():
-    def __init__(self, model="gpt2", interact=False, score=False, topK=10, Log=None, Scorer=None):
+    def __init__(self, model="gpt2", interact=False, score=False, topK=10, seed=0, Log=None):
         self.model = model
         self.topK = topK
         self.interact = interact
-        self._build(Log, Scorer)
+        self._build(seed, Log)
     
-    def _build(self, Log, Scorer):
+    def _build(self, seed, Log):
         if Log == None:
             Log = Logger()
-        if Scorer == None:
-            Scorer = Score()
 
         self.Log = Log
-        self.Scorer = Scorer
-        self.Encoder = Encoder()
+        self.Scorer = Score()
+        self.Encoder = Encoder(seed)
         self.GPT = GPT2LanguageModel(model_name=self.model)
 
     def _run(self, text):
         logits = self.GPT.predict(text, "")
         probabilities = torch.nn.functional.softmax(logits)
 
-        best_logits, best_indices = logits.topk(self.topK)
+        best_indices = logits.topk(self.topK)[1]
         self.best_words = [self.GPT[idx.item()] for idx in best_indices]
         self.best_probabilities = probabilities[best_indices].tolist()
     
@@ -87,8 +85,10 @@ class Guesser():
 
                 guess = self.Log.Input("What will the next word be >> ")
                 self._process(text, guess)
-            
-        self.Log.Info("Score: {}".format(self.Scorer.calcScore()))
+        
+        score = self.Scorer.calcScore()
+        self.Log.Info("Score: {}".format(score))
+        return score
 
     def _output(self):
         ''' returns top-k words and propabilities '''

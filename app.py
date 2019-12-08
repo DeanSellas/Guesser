@@ -9,7 +9,7 @@ from vendor.logger.logger import Logger
 from tests import encodeTests
 
 Log = Logger()
-def start(model="gpt2", interact=False, score=False, topK=10, text="", logpath="", tests=False):
+def start(model="gpt2", interact=False, score=False, topK=10, text="", seed=0, logpath="", tests=False):
     if tests:
         runTests()
         return
@@ -19,7 +19,7 @@ def start(model="gpt2", interact=False, score=False, topK=10, text="", logpath="
     
     Log.Info(text="Model: {} | Interact: {} | TopK: {} | Text: {} | Log Path: {} | Tests: {}".format(
         model, interact, topK, text, logpath, tests))
-    guess = Guesser(model, interact, score, topK, Log)
+    guess = Guesser(model, interact, score, topK, seed, Log)
     guess.start(text)
 
 def checks(model, topK, Log):

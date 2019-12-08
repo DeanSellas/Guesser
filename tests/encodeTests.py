@@ -1,4 +1,5 @@
 from src.encoder import Encoder
+from src.guesser import Guesser
 
 frank = "You will rejoice to hear that no disaster has accompanied the\
 commencement of an enterprise which you have regarded with such evil\
@@ -39,5 +40,8 @@ or by ascertaining the secret of the magnet, which, if at\
 all possible, can only be effected by an undertaking such as mine."
 
 def run():
-    a = Encoder(0)
-    print(a.encode(frank))
+    # Seed 10 Score should be 15.2
+    guess = Guesser(seed=10)
+    s = guess.start(frank)
+    if s == 15.2:
+        print("TEST PASSED!")
