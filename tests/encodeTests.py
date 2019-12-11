@@ -1,5 +1,6 @@
 from src.encoder import Encoder
-from src.guesser import Guesser
+from src.pyReadability import pyReadability
+from vendor.logger.logger import Logger
 
 frank = "You will rejoice to hear that no disaster has accompanied the\
 commencement of an enterprise which you have regarded with such evil\
@@ -39,9 +40,9 @@ to those countries, to reach which at present so many months are requisite\
 or by ascertaining the secret of the magnet, which, if at\
 all possible, can only be effected by an undertaking such as mine."
 
-def run():
+def run(Log):
     # Seed 10 Score should be 15.2
-    guess = Guesser(seed=10)
-    s = guess.start(frank)
+    pyRead = pyReadability(seed=10)
+    s = pyRead.start(frank)
     if s == 15.2:
-        print("TEST PASSED!")
+        Log.Info("TEST PASSED!")

@@ -2,11 +2,9 @@ import os
 
 from fire import Fire
 
-from src.guesser import Guesser
+from src.pyReadability import pyReadability
 
 from vendor.logger.logger import Logger
-
-from tests import encodeTests
 
 Log = Logger()
 def start(model="gpt2", interact=False, score=False, topK=10, text="", seed=0, logpath="", tests=False):
@@ -19,8 +17,8 @@ def start(model="gpt2", interact=False, score=False, topK=10, text="", seed=0, l
     
     Log.Info(text="Model: {} | Interact: {} | TopK: {} | Text: {} | Log Path: {} | Tests: {}".format(
         model, interact, topK, text, logpath, tests))
-    guess = Guesser(model, interact, score, topK, seed, Log)
-    guess.start(text)
+    pyRead = pyReadability(model, interact, score, topK, seed, Log)
+    pyRead.start(text)
 
 def checks(model, topK, Log):
     model_List = ["gpt2", "gpt2-medium", "gpt2-large"]
@@ -31,7 +29,8 @@ def checks(model, topK, Log):
         Log.Error("TopK must be a value greater than 0", ValueError)
 
 def runTests():
-    encodeTests.run()
+    from tests import encodeTests
+    encodeTests.run(Log)
     
 
 if __name__ == "__main__":

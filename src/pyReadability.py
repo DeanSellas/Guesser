@@ -7,8 +7,11 @@ from vendor.lmexplorer.lm_explorer.lm.gpt2 import GPT2LanguageModel
 
 from vendor.logger.logger import Logger
 
-class Guesser():
+class pyReadability():
     def __init__(self, model="gpt2", interact=False, score=False, topK=10, seed=0, Log=None):
+        '''
+            Main class for the applicaiton. Loads the data, encodes it and runs scoring algortim.
+        '''
         self.model = model
         self.topK = topK
         self.interact = interact

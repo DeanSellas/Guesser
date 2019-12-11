@@ -1,6 +1,9 @@
 from vendor.logger.logger import Logger
 
 class Score():
+    '''
+        Scorer class takes an input and scores its readability based on the GPT-2 Model Selected
+    '''
     def __init__(self, mod=1, Log=None):
         if Log == None:
             Log = Logger()
@@ -17,7 +20,7 @@ class Score():
         s = 0.0
         for item in outList:
             if text == self._remSpecial(item[0]):
-                s = (item[1] / outList[0][1]) * 100
+                s = round((item[1] / outList[0][1]) * 100, 2)
                 break
         
         out = (text, s)
