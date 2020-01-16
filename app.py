@@ -7,7 +7,7 @@ from src.pyReadability import pyReadability
 from vendor.logger.logger import Logger
 
 Log = Logger()
-def start(model="gpt2", interact=False, score=False, topK=10, text="", seed=0, logpath="", tests=False):
+def start(model="gpt2", interact=False, score=False, topK=10, text="", seed=0, mod=1, logpath="", tests=False):
     if tests:
         runTests()
         return
@@ -17,7 +17,7 @@ def start(model="gpt2", interact=False, score=False, topK=10, text="", seed=0, l
     
     Log.Info(text="Model: {} | Interact: {} | TopK: {} | Text: {} | Log Path: {} | Tests: {}".format(
         model, interact, topK, text, logpath, tests))
-    pyRead = pyReadability(model, interact, score, topK, seed, Log)
+    pyRead = pyReadability(model, interact, score, topK, seed, mod, Log)
     pyRead.start(text)
 
 def checks(model, topK, Log):
