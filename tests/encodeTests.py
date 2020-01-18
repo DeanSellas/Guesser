@@ -44,5 +44,7 @@ def run(Log):
     # Seed 10 Score should be 15.2
     pyRead = pyReadability(seed=10)
     s = pyRead.start(frank)
-    if s == 15.2:
+    if s == 15.36:
         Log.Info("TEST PASSED!")
+    else:
+        Log.Warn("TEST FAILED!")
