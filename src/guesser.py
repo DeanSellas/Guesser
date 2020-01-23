@@ -35,6 +35,7 @@ class Guesser():
         
         # calculates probabilities
         probabilities = torch.nn.functional.softmax(logits)
+
         # creates a list of probabilites based on best_indicies. This is a parallel array to best_words
         best_probabilities = self._getPropability(probabilities[best_indices].tolist())
 
@@ -47,9 +48,12 @@ class Guesser():
 
     def _run(self, text, guess):
             ''' scores inputted text and logs it '''
+
+            # gives a list of the best words that GPT predicts
             guessList = self._getBestWords(text)
             self.Log.Info(("Answer List : {}".format(guessList)))
 
+            # scores guess word with the list of preditions
             score = self.Scorer.score(guessList, guess)
             self.Log.Info(score)
     

@@ -5,20 +5,19 @@ It picks random words inside the text and replaces with ${word} this will indica
 
 TODO figure out best way to handle text 
 '''
-import random, time
+import random
 
 
 class Encoder():
 
-    def __init__(self, seed=0):
+    def __init__(self, seed=0, maxEncode=25):
         self.rand = random
-        if(seed < 1):
-            seed = int(time.time())
         
         self.rand.seed(seed)
         
-        # calculates probability
-        self.prob = self.rand.random() * 0.25
+        # probabilty is a random percent based off of maxEncode * random (random is a number between 0 and 1)
+        self.prob = self.rand.random() * (maxEncode / 100)
+        # print("{0}%".format(round(self.prob*100, 2)))
 
     def encode(self, text):
         encodedText = ""
@@ -30,6 +29,7 @@ class Encoder():
                 if not ('a' <= word.lower() <= 'z'):
                     continue
                 feedLst.append([feed, word])
+                # tags the word for GPT to guess later
                 word = "${"+self._clean(word)+"}"
                 feed = ""
 

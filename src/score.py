@@ -36,7 +36,7 @@ class Score():
         self.Log.Info("Score of \'{}\': {}".format(text, score))
         self._totalScore += score
         
-        # stores text and score in a tuple and appends it the the scorelist before returning it
+        # stores text and score in a tuple and appends it the scorelist before returning it
         output = (text, score)
         self.scoreList.append(output)
         return output
