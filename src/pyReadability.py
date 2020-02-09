@@ -13,14 +13,16 @@ class pyReadability():
     '''
         Main class for the applicaiton. Loads the data, encodes it and runs scoring algortim.
     '''
-    def __init__(self, model="gpt2", interact=False, score=False, topK=10, seed=0, mod=1, Log=None):
-        
+    def __init__(self, model, interact, score, topK, seed, mod, probabilty, Log=None):
         self.model = model
         self.topK = topK
         self.interact = interact
         self._seed = seed
-        self._build(mod, Log)
+        self._probabilty = probabilty
         self._score = -1
+        
+
+        self._build(mod, Log)
     
     def _build(self, mod, Log):
         if Log == None:
@@ -32,7 +34,7 @@ class pyReadability():
 
         self.Log = Log
         self.Scorer = Score(mod, self.Log)
-        self.Encoder = Encoder(self._seed)
+        self.Encoder = Encoder(seed=self._seed, probabilty=self._probabilty)
         self.GPT = GPT2LanguageModel(model_name=self.model)
 
     def _run(self, text):
@@ -44,9 +46,7 @@ class pyReadability():
         self.best_probabilities = probabilities[best_indices].tolist()
     
     def _getWords(self):
-        '''
-            returns Top-K Words from GPT-2
-        '''
+        ''' returns Top-K Words from GPT-2 '''
         return self.best_words
     
     def _getPropability(self):
@@ -64,9 +64,9 @@ class pyReadability():
     
     def start(self, text=""):
         ''' 
-        starts program
+            starts program
 
-        text = Text to be inputted
+            text = Text to be inputted
         '''
 
         if text == "" and not self.interact:
@@ -103,12 +103,15 @@ class pyReadability():
         
 
     def getScore(self):
+        ''' returns the score '''
         return self._score
 
     def getSeed(self):
+        ''' returns the seed used '''
         return self._seed
 
     def getEncoder(self):
+        ''' returns the encoder object '''
         return self.Encoder
 
     def _output(self):
