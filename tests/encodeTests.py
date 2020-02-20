@@ -40,11 +40,12 @@ to those countries, to reach which at present so many months are requisite\
 or by ascertaining the secret of the magnet, which, if at\
 all possible, can only be effected by an undertaking such as mine."
 
+
 def run(Log):
     # Seed 10 Score should be 15.2
     pyRead = pyReadability(seed=10)
-    s = pyRead.start(frank)
-    if s == 15.36:
+    s1 = pyRead.start(frank)
+    if s1 == 15.36:
         Log.Info("TEST PASSED!")
     else:
         Log.Warn("TEST FAILED!")
