@@ -38,12 +38,15 @@ def start(
         text = inFile.read()
         inFile.close()
 
+
+    totalRunTime = None
     if enableTimer:
         t1 = Timer(enableTimer, Log)
-    
+        totalRunTime = 0
+    Log.setLevel(2)
     out = list()
     for i in range(0, runs):
-
+        
         Log.Info("STARTING RUN {}".format(i+1))
 
         """Log.Info(text="Model: {} | Interact: {} | TopK: {} | Text Path: {} | Log Path: {} | Enable Timer: {} | Run Tests: {}".format(
@@ -59,6 +62,7 @@ def start(
         if enableTimer:
             t1.end()
             runTime = t1.result()
+            totalRunTime += runTime
             Log.Info("Took {} Seconds to Score".format(runTime))
 
         seed = pyRead.getSeed()
@@ -69,6 +73,8 @@ def start(
         out.append([seed, totalWords, wordsEncoded, percentEncoded, score, runTime])
 
         Log.Info("Words Encoded: {} | Total Words: {} | {}%".format(wordsEncoded, totalWords, percentEncoded))
+
+    Log.Info("Took {} Seconds to Run {} tests".format(totalRunTime, runs))
 
     fields = ['seed', 'total words', 'words encoded', 'percent encoded', 'score', 'time']
     Log.csvWriter(fields, out)

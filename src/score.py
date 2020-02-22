@@ -32,8 +32,6 @@ class Score():
                 if score > 100:
                     score = 100
                 break
-        
-        self.Log.Info("Score of \'{}\': {}".format(text, score))
         self._totalScore += score
         
         # stores text and score in a tuple and appends it the scorelist before returning it

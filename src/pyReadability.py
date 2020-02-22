@@ -26,7 +26,7 @@ class pyReadability():
     
     def _build(self, mod, Log):
         if Log == None:
-            Log = None
+            Log = Log()
 
         if(self._seed < 1):
             random.seed(time.time())
@@ -57,10 +57,12 @@ class pyReadability():
             ''' scores inputted text and logs it '''
             self._run(text)
             outputLst = self._output()
-            self.Log.Info(("Answer List : {}".format(outputLst)))
+            self.Log.Trace(("Answer List : {}".format(outputLst)))
 
             score = self.Scorer.score(outputLst, guess)
-            self.Log.Info(score)
+            self.Log.Trace(score)
+
+            self.Log.Info("Score of \'{}\': {}".format(score[0], score[1]))
     
     def start(self, text=""):
         ''' 
