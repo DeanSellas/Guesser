@@ -13,7 +13,7 @@ class pyReadability():
     '''
         Main class for the applicaiton. Loads the data, encodes it and runs scoring algortim.
     '''
-    def __init__(self, model, interact, score, topK, seed, mod, probabilty, Log=None):
+    def __init__(self, model, interact, topK, seed, mod, probabilty, Log=None):
         self.model = model
         self.topK = topK
         self.interact = interact

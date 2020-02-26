@@ -12,7 +12,6 @@ Log = Logger()
 def start(
     model="gpt2",
     interact=False,
-    score=False,
     topK=10,
     text="",
     feed="",
@@ -27,14 +26,15 @@ def start(
 
     Log.setPath(logPath)
 
-    checks(model, topK, runs, feed, probablity)
+    feedPath = os.path.join("feed","{}.txt".format(feed))
+    checks(model, topK, runs, feedPath, probablity)
     
     if enableTests:
         runTests()
         return
     
-    if feed != "":
-        inFile = open(feed, 'r', encoding="utf8")
+    if feedPath != "":
+        inFile = open(feedPath, 'r', encoding="utf8")
         text = inFile.read()
         inFile.close()
 
@@ -49,13 +49,14 @@ def start(
         
         Log.Info("STARTING RUN {}".format(i+1))
 
-        """Log.Info(text="Model: {} | Interact: {} | TopK: {} | Text Path: {} | Log Path: {} | Enable Timer: {} | Run Tests: {}".format(
-            model, interact, topK, feed, logPath, enableTimer, enableTests))"""
-        pyRead = pyReadability(model, interact, score, topK, seed, mod, probablity, Log)
+        Log.Trace(text="Model: {} | Interact: {} | TopK: {} | Text Path: {} | Log Path: {} | Enable Timer: {} | Run Tests: {}".format(model, interact, topK, feed, logPath, enableTimer, enableTests))
+
+        pyRead = pyReadability(model, interact, topK, seed, mod, probablity, Log)
 
         if enableTimer:
             t1.start()
         
+        # starts pyRead to score the inputted text. If text == null enable interactive mode
         pyRead.start(text)
 
         runTime = -1
@@ -72,12 +73,12 @@ def start(
 
         out.append([seed, totalWords, wordsEncoded, percentEncoded, score, runTime])
 
-        Log.Info("Words Encoded: {} | Total Words: {} | {}%".format(wordsEncoded, totalWords, percentEncoded))
+        Log.Info("Words Encoded: {} | Total Words: {} | With a score of {}%".format(wordsEncoded, totalWords, score))
 
     Log.Info("Took {} Seconds to Run {} tests".format(totalRunTime, runs))
 
     fields = ['seed', 'total words', 'words encoded', 'percent encoded', 'score', 'time']
-    Log.csvWriter(fields, out)
+    Log.csvWriter(feed, fields, out)
 
 def checks(model, topK, runs, feed, probablity):
 
@@ -93,7 +94,7 @@ def checks(model, topK, runs, feed, probablity):
         Log.Error("Runs must be a value greater than 0", ValueError)
 
     if feed != "" and not os.path.exists(feed):
-        Log.Error("Feed must be a valid path in the file system", ValueError)
+        Log.Error("Feed must be a feed provided in the documentation", ValueError)
 
     if probablity < 1 or probablity > 75:
         Log.Error("Probablity must be a value greater than 0 and less than 75", ValueError)
