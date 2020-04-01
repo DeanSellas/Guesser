@@ -8,25 +8,23 @@ from src.timer import Timer
 from vendor.logger.logger import Logger
 
 Log = Logger()
-
 def start(
     model="gpt2",
     interact=False,
     topK=10,
-    text="",
     feed="",
     seed=0,
     mod=1,
     logPath="Log",
-    enableTimer=False,
+    enableTimer=True,
     enableTests=False,
     runs=1,
-    probablity=25
-    ):
+    probablity=20,
+):
 
     Log.setPath(logPath)
 
-    feedPath = os.path.join("feed","{}.txt".format(feed))
+    feedPath = os.path.join("feed", "{}.txt".format(feed))
     checks(model, topK, runs, feedPath, probablity)
     
     if enableTests:
@@ -34,10 +32,9 @@ def start(
         return
     
     if feedPath != "":
-        inFile = open(feedPath, 'r', encoding="utf8")
+        inFile = open(feedPath, "r", encoding="utf8")
         text = inFile.read()
         inFile.close()
-
 
     totalRunTime = None
     if enableTimer:
@@ -46,7 +43,6 @@ def start(
     Log.setLevel(2)
     out = list()
     for i in range(0, runs):
-        
         Log.Info("STARTING RUN {}".format(i+1))
 
         Log.Trace(text="Model: {} | Interact: {} | TopK: {} | Text Path: {} | Log Path: {} | Enable Timer: {} | Run Tests: {}".format(model, interact, topK, feed, logPath, enableTimer, enableTests))
@@ -55,7 +51,6 @@ def start(
 
         if enableTimer:
             t1.start()
-        
         # starts pyRead to score the inputted text. If text == null enable interactive mode
         pyRead.start(text)
 
@@ -102,7 +97,5 @@ def checks(model, topK, runs, feed, probablity):
 def runTests():
     import tests
     tests.encodeTests.run(Log)
-    
-
 if __name__ == "__main__":
     Fire(start)

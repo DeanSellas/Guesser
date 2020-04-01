@@ -6,5 +6,6 @@ Log/
 
 # FILE Ext
 *.vsdx
+*.code-workspace
 
 # FILES
