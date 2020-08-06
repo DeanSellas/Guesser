@@ -80,7 +80,8 @@ class pyReadability():
                 if item[0] == '':
                     continue
                 self._process(item[0], item[1])
-
+                
+        # Code for Manual Input, meant for debugging not for production use
         else:
             while self.interact:
                 text = self.Log.Input("Input Text >> ")
@@ -101,12 +102,16 @@ class pyReadability():
                 self._process(text, guess)
         
         self._score = self.Scorer.calcScore()
-        # self.Log.Info("Score: {}".format(self._score))
+        self.Log.Info("Normalized Score: {} | Unnormalized Score: {}".format(self.getNormScore(), self.getUnNormScore()))
         
 
-    def getScore(self):
-        ''' returns the score '''
-        return self._score
+    def getNormScore(self):
+        ''' returns the normalized score '''
+        return self._score[0]
+
+    def getUnNormScore(self):
+        ''' returns the unormalized score '''
+        return self._score[1]
 
     def getSeed(self):
         ''' returns the seed used '''

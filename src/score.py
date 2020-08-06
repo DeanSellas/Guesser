@@ -8,34 +8,56 @@ class Score():
         if Log == None:
             Log = Logger()
         
-        self._totalScore = 0
+        self._totalNormScore = 0
+        self._totalUnnormScore = 0
 
         self.Log = Log
         self.scoreList = list()
         self._setMod(mod)
 
+    # MAIN FUNCTION USED FOR SCORING
     def score(self, guessList, text):
         '''
             Scores guesses with inputed text
 
-            guesslist is a list of strings and probabilities for potential next words
+            guesslist: is a list of strings and probabilities for potential next words
 
             text is the actual next word in the string
         '''
         
-        # 
-        score = 0.0
-        for item in guessList:
-            if text == self._remSpecial(item[0]):
-                score = item[1] / guessList[0][1] * 100 + self.Mod
-                score = round(score, 2)
-                if score > 100:
-                    score = 100
+        total = 0
+                
+        for s in guessList:
+            total += s[1]
+
+        # Score is the return value - init it 0
+        norm_score = 0.0
+
+        unnorm_score = 0.0
+
+        # loop through items in the guess list taken from gpt
+        # guess will be a tuple (WORD, PERCENT CHANCE)        
+        for guess in guessList:
+
+            # if actual word matches the guess word, score the word
+            if text == self._remSpecial(guess[0]):
+
+                # Score is equal to CHANCE_OF_WORD / totalprob * 100
+                norm_score = guess[1] / total * 100
+
+                unnorm_score = guess[1]
+
+                # round score to nearest 0.xx
+                norm_score = round(norm_score, 2)
+                # if score is greater than 100 (due to modifier) set it to be 100
+                if norm_score > 100:
+                    norm_score = 100
                 break
-        self._totalScore += score
+        self._totalNormScore += norm_score
+        self._totalUnnormScore += unnorm_score
         
         # stores text and score in a tuple and appends it the scorelist before returning it
-        output = (text, score)
+        output = (text, norm_score, unnorm_score)
         self.scoreList.append(output)
         return output
     
@@ -44,8 +66,10 @@ class Score():
         if len(self.scoreList) < 1:
             return 0.0
 
+
+        # move 100s
         # rounds adverage score to the nearest x.xx place
-        return round(self._totalScore / (len(self.scoreList) * 100) * 100, 2)
+        return (round(self._totalNormScore / (len(self.scoreList) * 100) * 100, 2), self._totalUnnormScore)
 
     def _setMod(self, mod):
         ''' Sets modifier variable '''
