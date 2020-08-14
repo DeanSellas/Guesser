@@ -63,16 +63,15 @@ def start(
 
         seed = pyRead.getSeed()
         totalWords, wordsEncoded = pyRead.getEncoder().wordsEncoded()
-        percentEncoded = round(wordsEncoded/totalWords*100, 2)
-        score = pyRead.getScore()
+        percentEncoded = round(wordsEncoded / totalWords * 100, 2)
+        
+        out.append([seed, totalWords, wordsEncoded, percentEncoded, pyRead.getNormScore(), pyRead.getUnNormScore(), runTime])
 
-        out.append([seed, totalWords, wordsEncoded, percentEncoded, score, runTime])
-
-        Log.Info("Words Encoded: {} | Total Words: {} | With a score of {}%".format(wordsEncoded, totalWords, score))
+        Log.Info("Words Encoded: {} | Total Words: {} | With a score of {}%".format(wordsEncoded, totalWords, pyRead.getNormScore()))
 
     Log.Info("Took {} Seconds to Run {} tests".format(totalRunTime, runs))
 
-    fields = ['seed', 'total words', 'words encoded', 'percent encoded', 'score', 'time']
+    fields = ['seed', 'total words', 'words encoded', 'percent encoded', 'Norm Score', 'Unnorm Score' 'time']
     Log.csvWriter(feed, fields, out)
 
 def checks(model, topK, runs, feed, probablity):

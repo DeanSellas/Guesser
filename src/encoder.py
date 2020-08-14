@@ -22,14 +22,18 @@ class Encoder():
         # print("{0}%".format(round(self.probabilty*100, 2)))
         self.probabilty = probabilty / 100
 
-    def encode(self, text):
+    def encode(self, text, feed_length = 10):
         '''encoded inputted text'''
         encodedText = ""
         feedLst = []
         feed = ""
         useNext = False
-        self._totalWords = len(text.split())
-        for word in text.split():
+        
+        text = text.split()
+        self._totalWords = len(text)
+        count = 0
+        for word in text:
+            count += 1
             if useNext or self.rand.random() <= self.probabilty:
                 # skip any non letter characters
                 if not ('a' <= word.lower() <= 'z'):
@@ -38,12 +42,15 @@ class Encoder():
                 feedLst.append([feed, word])
                 # tags the word for GPT to guess later
                 word = "${"+self._clean(word)+"}"
-                feed = ""
+                # feed = ""
                 self._encodedWords += 1
                 useNext = False
-
+            elif count < feed_length:
+                feed = " ".join(text[0:count])
             else:
-                feed += "{} ".format(word)
+                feed = " ".join(text[count - feed_length:count])
+            
+            
             encodedText += "{} ".format(word)
 
         return (feedLst, encodedText)
