@@ -13,18 +13,19 @@ class pyReadability():
     '''
         Main class for the applicaiton. Loads the data, encodes it and runs scoring algortim.
     '''
-    def __init__(self, model, interact, topK, seed, mod, probabilty, Log=None):
+    def __init__(self, model, interact, topK, seed, mod, probability, Log=None):
+        ''' Take in variables and starts the program. See readme for inputs'''
         self.model = model
         self.topK = topK
         self.interact = interact
         self._seed = seed
-        self._probabilty = probabilty
+        self._probability = probability
         self._score = -1
         
-
         self._build(mod, Log)
     
     def _build(self, mod, Log):
+        ''' Builds application using variables provided by user '''
         if Log == None:
             Log = Log()
 
@@ -34,10 +35,11 @@ class pyReadability():
 
         self.Log = Log
         self.Scorer = Score(mod, self.Log)
-        self.Encoder = Encoder(seed=self._seed, probabilty=self._probabilty)
+        self.Encoder = Encoder(seed=self._seed, probability=self._probability)
         self.GPT = GPT2LanguageModel(model_name=self.model)
 
     def _run(self, text):
+        ''' Runs GTP and gets results ''' 
         logits = self.GPT.predict(text, "")
         probabilities = torch.nn.functional.softmax(logits)
 
@@ -55,6 +57,7 @@ class pyReadability():
 
     def _process(self, text, guess):
             ''' scores inputted text and logs it '''
+
             self._run(text)
             outputLst = self._output()
             self.Log.Trace(("Answer List : {}".format(outputLst)))
@@ -76,7 +79,7 @@ class pyReadability():
 
         if text != "":
             encoded = self.Encoder.encode(text=text)
-            for item in encoded[0]:
+            for item in encoded:
                 if item[0] == '':
                     continue
                 self._process(item[0], item[1])

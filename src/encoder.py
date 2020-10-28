@@ -10,20 +10,20 @@ import random
 
 class Encoder():
 
-    def __init__(self, seed, probabilty):
+    def __init__(self, seed, probability):
         self.rand = random
         
         self.rand.seed(seed)
         
         self._totalWords = 0
         self._encodedWords = 0
-        # probabilty is a random percent based off of maxEncode * random (random is a number between 0 and 1)
-        # self.probabilty = self.rand.random() * (probabilty/ 100)
-        # print("{0}%".format(round(self.probabilty*100, 2)))
-        self.probabilty = probabilty / 100
+        # probability is a random percent based off of maxEncode * random (random is a number between 0 and 1)
+        # self.probability = self.rand.random() * (probability/ 100)
+        # print("{0}%".format(round(self.probability*100, 2)))
+        self.probability = probability / 100
 
-    def encode(self, text, feed_length = 10):
-        '''encoded inputted text'''
+    def encode(self, text, feed_length = 20):
+        ''' Encoded inputted text '''
         encodedText = ""
         feedLst = []
         feed = ""
@@ -34,15 +34,18 @@ class Encoder():
         count = 0
         for word in text:
             count += 1
-            if useNext or self.rand.random() <= self.probabilty:
+            if useNext or self.rand.random() <= self.probability:
                 # skip any non letter characters
                 if not ('a' <= word.lower() <= 'z'):
                     useNext = True
                     continue
+
+                # gives feed and word to guess
                 feedLst.append([feed, word])
+                
                 # tags the word for GPT to guess later
                 word = "${"+self._clean(word)+"}"
-                # feed = ""
+
                 self._encodedWords += 1
                 useNext = False
             elif count < feed_length:
@@ -50,17 +53,16 @@ class Encoder():
             else:
                 feed = " ".join(text[count - feed_length:count])
             
-            
             encodedText += "{} ".format(word)
 
-        return (feedLst, encodedText)
+        return feedLst
 
     def decode(self):
         pass
     
     def getProbablity(self):
         '''returns probability'''
-        return self.probabilty
+        return self.probability
 
     def wordsEncoded(self):
         '''returns tuple of (encodedWords, totalWords)'''
